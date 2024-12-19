@@ -2,20 +2,15 @@ package dev.hloth.medsreminder.tile
 
 import android.content.Context
 import androidx.wear.protolayout.ActionBuilders
-import androidx.wear.protolayout.ColorBuilders.argb
 import androidx.wear.protolayout.DimensionBuilders.expand
+import androidx.wear.protolayout.DimensionBuilders.wrap
 import androidx.wear.protolayout.LayoutElementBuilders
-import androidx.wear.protolayout.ModifiersBuilders
 import androidx.wear.protolayout.ModifiersBuilders.Clickable
 import androidx.wear.protolayout.ResourceBuilders
 import androidx.wear.protolayout.TimelineBuilders
 import androidx.wear.protolayout.material.Colors
-import androidx.wear.protolayout.material.Text
 import androidx.wear.protolayout.material.ChipColors
-import androidx.wear.protolayout.material.Button
-import androidx.wear.protolayout.material.ButtonColors
 import androidx.wear.protolayout.material.Chip
-import androidx.wear.protolayout.material.Typography
 import androidx.wear.protolayout.material.layouts.PrimaryLayout
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.TileBuilders
@@ -48,6 +43,44 @@ private fun resources(
         .build()
 }
 
+private fun createMedChip(
+    context: Context,
+    chipId: String,
+    chipText: String
+): LayoutElementBuilders.LayoutElement {
+    return Chip.Builder(
+        context,
+        Clickable.Builder()
+            .setId(chipId)
+            .setOnClick(ActionBuilders.LoadAction.Builder().build())
+            .build(),
+        buildDeviceParameters(context.resources)
+    )
+        .setPrimaryLabelContent(chipText)
+        .setWidth(expand())
+        .setChipColors(ChipColors.secondaryChipColors(Colors.DEFAULT))
+        .build()
+}
+
+private fun createChipRow(
+    context: Context,
+    leftChipId: String,
+    leftChipText: String,
+    rightChipId: String,
+    rightChipText: String
+): LayoutElementBuilders.LayoutElement {
+    return LayoutElementBuilders.Row.Builder()
+        .setWidth(expand())
+        .setHeight(wrap())
+        .addContent(
+            createMedChip(context, leftChipId, leftChipText)
+        )
+        .addContent(
+            createMedChip(context, rightChipId, rightChipText)
+        )
+        .build()
+}
+
 private fun tile(
     requestParams: RequestBuilders.TileRequest,
     context: Context,
@@ -74,22 +107,23 @@ private fun tileLayout(
     requestParams: RequestBuilders.TileRequest,
     context: Context,
 ): LayoutElementBuilders.LayoutElement {
+
     return PrimaryLayout.Builder(requestParams.deviceConfiguration)
         .setResponsiveContentInsetEnabled(true)
         .setContent(
-            Chip.Builder(
-                context,
-                Clickable.Builder()
-                    .setId("med_1")
-                    .setOnClick(ActionBuilders.LoadAction.Builder().build())
-                    .build(),
-                buildDeviceParameters(context.resources))
-                    .setPrimaryLabelContent("hello")
-//                    .setSecondaryLabelContent(contentChipSecondaryLabelText)
-//                    .setIconContent(container.container)
-                    .setWidth(expand())
-                .setChipColors(ChipColors.secondaryChipColors(Colors.DEFAULT))
-                    .build()
+            LayoutElementBuilders.Column.Builder()
+                .setWidth(expand())
+                .setHeight(wrap())
+                .addContent(
+                    createChipRow(context, "med_1", "Med 1", "med_2", "Med 2")
+                )
+                .addContent(
+                    createChipRow(context, "med_3", "Med 3", "med_4", "Med 4")
+                )
+                .addContent(
+                    createChipRow(context, "med_6", "Med 6", "med_7", "Med 7")
+                )
+                .build()
         )
         .build()
 }
