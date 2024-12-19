@@ -1,31 +1,18 @@
 package dev.hloth.medsreminder.tile
 
 import android.content.Context
-import androidx.annotation.Dimension
-import androidx.compose.ui.graphics.Color
-import androidx.wear.compose.material.Text
 import androidx.wear.protolayout.ActionBuilders
 import androidx.wear.protolayout.ColorBuilders.argb
 import androidx.wear.protolayout.DimensionBuilders.dp
-import androidx.wear.protolayout.DimensionBuilders.em
-import androidx.wear.protolayout.DimensionBuilders.expand
 import androidx.wear.protolayout.DimensionBuilders.sp
 import androidx.wear.protolayout.DimensionBuilders.wrap
 import androidx.wear.protolayout.LayoutElementBuilders
-import androidx.wear.protolayout.LayoutElementBuilders.FONT_WEIGHT_BOLD
 import androidx.wear.protolayout.LayoutElementBuilders.FONT_WEIGHT_NORMAL
-import androidx.wear.protolayout.LayoutElementBuilders.FontVariantProp
 import androidx.wear.protolayout.ModifiersBuilders.Clickable
 import androidx.wear.protolayout.ResourceBuilders
 import androidx.wear.protolayout.TimelineBuilders
 import androidx.wear.protolayout.expression.ProtoLayoutExperimental
 import androidx.wear.protolayout.material.Button
-import androidx.wear.protolayout.material.Colors
-import androidx.wear.protolayout.material.ChipColors
-import androidx.wear.protolayout.material.Chip
-import androidx.wear.protolayout.material.CompactChip
-import androidx.wear.protolayout.material.Text
-import androidx.wear.protolayout.material.Text.*
 import androidx.wear.protolayout.material.layouts.PrimaryLayout
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.TileBuilders
@@ -33,7 +20,6 @@ import androidx.wear.tiles.tooling.preview.Preview
 import androidx.wear.tiles.tooling.preview.TilePreviewData
 import androidx.wear.tooling.preview.devices.WearDevices
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
-import com.google.android.horologist.compose.tools.buildDeviceParameters
 import com.google.android.horologist.tiles.SuspendingTileService
 
 private const val RESOURCES_VERSION = "0"
@@ -69,8 +55,7 @@ private fun createMedChip(
         Clickable.Builder()
             .setId(chipId)
             .setOnClick(ActionBuilders.LoadAction.Builder().build())
-            .build(),
-//        buildDeviceParameters(context.resources)
+            .build()
     )
         .setCustomContent(
             LayoutElementBuilders.Text.Builder()
@@ -88,7 +73,6 @@ private fun createMedChip(
 
         )
         .setSize(dp(47f))
-//        .setChipColors(ChipColors.secondaryChipColors(Colors.DEFAULT))
         .build()
 }
 
