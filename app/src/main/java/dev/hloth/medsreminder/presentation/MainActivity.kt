@@ -5,10 +5,11 @@
 
 package dev.hloth.medsreminder.presentation
 
+import android.graphics.LinearGradient
+import android.graphics.Shader
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,15 +17,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
-import androidx.wear.compose.material.TimeText
+import androidx.wear.protolayout.ColorBuilders.argb
 import androidx.wear.tooling.preview.devices.WearDevices
-import dev.hloth.medsreminder.R
 import dev.hloth.medsreminder.presentation.theme.MedsReminderTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,13 +41,24 @@ class MainActivity : ComponentActivity() {
         setTheme(android.R.style.Theme_DeviceDefault)
 
         setContent {
-            WearApp("Android")
+            WearApp()
         }
     }
 }
 
 @Composable
-fun WearApp(greetingName: String) {
+fun WearApp() {
+//    val textShader: Shader = LinearGradient(
+//        0f, 0f, 0f, 20f,
+//        0xFF000000.toInt(), 0xFF000000.toInt(),
+//        Shader.TileMode.CLAMP
+//    )
+//    val brush = Brush.shader(textShader)
+    val gradient = Brush.linearGradient(
+        colors = listOf(Color.Magenta, Color.Cyan),
+        start = Offset(0f, 0f),
+        end = Offset(300f, 0f)
+    )
     MedsReminderTheme {
         Box(
             modifier = Modifier
@@ -49,24 +66,22 @@ fun WearApp(greetingName: String) {
                 .background(MaterialTheme.colors.background),
             contentAlignment = Alignment.Center
         ) {
-            TimeText()
-            Greeting(greetingName = greetingName)
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                color = Color.Red,
+                style = TextStyle(
+                    brush = gradient
+                ),
+                text = "Здесь ничего нет :)",
+
+            )
         }
     }
-}
-
-@Composable
-fun Greeting(greetingName: String) {
-    Text(
-        modifier = Modifier.fillMaxWidth(),
-        textAlign = TextAlign.Center,
-        color = MaterialTheme.colors.primary,
-        text = stringResource(R.string.hello_world, greetingName)
-    )
 }
 
 @Preview(device = WearDevices.SMALL_ROUND, showSystemUi = true)
 @Composable
 fun DefaultPreview() {
-    WearApp("Preview Android")
+    WearApp()
 }

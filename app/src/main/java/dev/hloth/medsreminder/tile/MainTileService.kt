@@ -1,16 +1,31 @@
 package dev.hloth.medsreminder.tile
 
 import android.content.Context
+import androidx.annotation.Dimension
+import androidx.compose.ui.graphics.Color
+import androidx.wear.compose.material.Text
 import androidx.wear.protolayout.ActionBuilders
+import androidx.wear.protolayout.ColorBuilders.argb
+import androidx.wear.protolayout.DimensionBuilders.dp
+import androidx.wear.protolayout.DimensionBuilders.em
 import androidx.wear.protolayout.DimensionBuilders.expand
+import androidx.wear.protolayout.DimensionBuilders.sp
 import androidx.wear.protolayout.DimensionBuilders.wrap
 import androidx.wear.protolayout.LayoutElementBuilders
+import androidx.wear.protolayout.LayoutElementBuilders.FONT_WEIGHT_BOLD
+import androidx.wear.protolayout.LayoutElementBuilders.FONT_WEIGHT_NORMAL
+import androidx.wear.protolayout.LayoutElementBuilders.FontVariantProp
 import androidx.wear.protolayout.ModifiersBuilders.Clickable
 import androidx.wear.protolayout.ResourceBuilders
 import androidx.wear.protolayout.TimelineBuilders
+import androidx.wear.protolayout.expression.ProtoLayoutExperimental
+import androidx.wear.protolayout.material.Button
 import androidx.wear.protolayout.material.Colors
 import androidx.wear.protolayout.material.ChipColors
 import androidx.wear.protolayout.material.Chip
+import androidx.wear.protolayout.material.CompactChip
+import androidx.wear.protolayout.material.Text
+import androidx.wear.protolayout.material.Text.*
 import androidx.wear.protolayout.material.layouts.PrimaryLayout
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.TileBuilders
@@ -43,42 +58,59 @@ private fun resources(
         .build()
 }
 
+@androidx.annotation.OptIn(ProtoLayoutExperimental::class)
 private fun createMedChip(
     context: Context,
     chipId: String,
     chipText: String
 ): LayoutElementBuilders.LayoutElement {
-    return Chip.Builder(
+    return Button.Builder(
         context,
         Clickable.Builder()
             .setId(chipId)
             .setOnClick(ActionBuilders.LoadAction.Builder().build())
             .build(),
-        buildDeviceParameters(context.resources)
+//        buildDeviceParameters(context.resources)
     )
-        .setPrimaryLabelContent(chipText)
-        .setWidth(expand())
-        .setChipColors(ChipColors.secondaryChipColors(Colors.DEFAULT))
+        .setCustomContent(
+            LayoutElementBuilders.Text.Builder()
+                .setText(chipText)
+                .setFontStyle(
+                    LayoutElementBuilders.FontStyle.Builder()
+                        .setSize(sp(12f))
+                        .setPreferredFontFamilies(LayoutElementBuilders.FontStyle.ROBOTO_FLEX_FONT)
+                        .setWeight(FONT_WEIGHT_NORMAL)
+                        .setColor(argb(0xFF000000.toInt()))
+                        .build()
+                )
+                .setMaxLines(2)
+                .build()
+
+        )
+        .setSize(dp(47f))
+//        .setChipColors(ChipColors.secondaryChipColors(Colors.DEFAULT))
         .build()
 }
 
-private fun createChipRow(
+private fun createChipColumn(
     context: Context,
-    leftChipId: String,
-    leftChipText: String,
-    rightChipId: String,
-    rightChipText: String
+    chipData: List<Pair<String, String>>
 ): LayoutElementBuilders.LayoutElement {
-    return LayoutElementBuilders.Row.Builder()
-        .setWidth(expand())
+    val columnBuilder = LayoutElementBuilders.Column.Builder()
         .setHeight(wrap())
-        .addContent(
-            createMedChip(context, leftChipId, leftChipText)
+
+    chipData.forEach { (chipId, chipText) ->
+        columnBuilder.addContent(
+            createMedChip(context, chipId, chipText)
         )
-        .addContent(
-            createMedChip(context, rightChipId, rightChipText)
+        columnBuilder.addContent(
+            LayoutElementBuilders.Spacer.Builder()
+                .setHeight(dp(4f))
+                .build()
         )
-        .build()
+    }
+
+    return columnBuilder.build()
 }
 
 private fun tile(
@@ -108,21 +140,33 @@ private fun tileLayout(
     context: Context,
 ): LayoutElementBuilders.LayoutElement {
 
+    val gap = LayoutElementBuilders.Spacer.Builder()
+        .setWidth(dp(4f))
+        .build()
+
     return PrimaryLayout.Builder(requestParams.deviceConfiguration)
         .setResponsiveContentInsetEnabled(true)
         .setContent(
             LayoutElementBuilders.Column.Builder()
-                .setWidth(expand())
-                .setHeight(wrap())
                 .addContent(
-                    createChipRow(context, "med_1", "Med 1", "med_2", "Med 2")
+                    LayoutElementBuilders.Row.Builder()
+                        .setWidth(wrap())
+                        .setHeight(wrap())
+                        .addContent(
+                            createChipColumn(context, listOf("triptan_forte" to "Трип-\nтан", "hour_timer" to "1:00:00"))
+                        )
+                        .addContent(gap)
+                        .addContent(
+                            createChipColumn(context, listOf("20_min_timer" to "20:00", "nogast" to "Ногаст", "metigast" to "Мети-\nгаст"))
+                        )
+                        .addContent(gap)
+                        .addContent(
+                            createChipColumn(context, listOf("active" to "Актив\nфлора", "pankraza" to "Панк-\nраза"))
+                        )
+                        .build()
                 )
-                .addContent(
-                    createChipRow(context, "med_3", "Med 3", "med_4", "Med 4")
-                )
-                .addContent(
-                    createChipRow(context, "med_6", "Med 6", "med_7", "Med 7")
-                )
+                .setWidth(wrap())
+                .setHorizontalAlignment(LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER)
                 .build()
         )
         .build()
