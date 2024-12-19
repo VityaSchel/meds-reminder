@@ -16,13 +16,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.fragment.app.FragmentActivity
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
+import androidx.wear.tiles.TileService
 import androidx.wear.tooling.preview.devices.WearDevices
 import dev.hloth.medsreminder.presentation.theme.MedsReminderTheme
 
 
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
 
@@ -30,14 +32,17 @@ class MainActivity : ComponentActivity() {
 
         setTheme(android.R.style.Theme_DeviceDefault)
 
+        val clickableId =
+            intent.getStringExtra(TileService.EXTRA_CLICKABLE_ID)
+
         setContent {
-            WearApp()
+            WearApp(clickableId)
         }
     }
 }
 
 @Composable
-fun WearApp() {
+fun WearApp(clickableId: String?) {
     val gradient = Brush.linearGradient(
         colors = listOf(Color.Magenta, Color.Cyan),
         start = Offset(0f, 0f),
@@ -57,8 +62,7 @@ fun WearApp() {
                 style = TextStyle(
                     brush = gradient
                 ),
-                text = "Здесь ничего нет :)",
-
+                text = clickableId ?: "Здесь ничего нет :)",
             )
         }
     }
@@ -67,5 +71,5 @@ fun WearApp() {
 @Preview(device = WearDevices.SMALL_ROUND, showSystemUi = true)
 @Composable
 fun DefaultPreview() {
-    WearApp()
+    WearApp(null)
 }

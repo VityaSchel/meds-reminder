@@ -1,6 +1,10 @@
 package dev.hloth.medsreminder.tile
 
+import android.app.TaskStackBuilder
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.widget.Toast
 import androidx.wear.protolayout.ActionBuilders
 import androidx.wear.protolayout.ColorBuilders.argb
 import androidx.wear.protolayout.DimensionBuilders.dp
@@ -21,6 +25,7 @@ import androidx.wear.tiles.tooling.preview.TilePreviewData
 import androidx.wear.tooling.preview.devices.WearDevices
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.tiles.SuspendingTileService
+import dev.hloth.medsreminder.presentation.MainActivity
 
 private const val RESOURCES_VERSION = "0"
 
@@ -54,7 +59,11 @@ private fun createMedChip(
         context,
         Clickable.Builder()
             .setId(chipId)
-            .setOnClick(ActionBuilders.LoadAction.Builder().build())
+            .setOnClick(
+                ActionBuilders.launchAction(
+                    ComponentName(context.packageName, context.packageName + ".WriteMed")
+                )
+            )
             .build()
     )
         .setCustomContent(
@@ -138,7 +147,7 @@ private fun tileLayout(
                         .setHeight(wrap())
                         .addContent(
                             createChipColumn(context, listOf("triptan_forte" to "Трип-\nтан", "hour_timer" to "1:00:00"))
-                        )
+                        )//"com.samsung.android.watch.timer"
                         .addContent(gap)
                         .addContent(
                             createChipColumn(context, listOf("20_min_timer" to "20:00", "nogast" to "Ногаст", "metigast" to "Мети-\nгаст"))
