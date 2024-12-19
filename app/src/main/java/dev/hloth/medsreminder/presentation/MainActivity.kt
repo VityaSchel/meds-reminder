@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalHorologistApi::class)
+
 package dev.hloth.medsreminder.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -6,23 +8,29 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.wear.compose.material.TitleCard
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
+import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
+import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
+import androidx.wear.compose.material.Chip
+import androidx.wear.compose.material.ChipDefaults
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
+import androidx.wear.protolayout.ModifiersBuilders
+import androidx.wear.protolayout.material.ChipColors
+import androidx.wear.protolayout.material.Colors
 import androidx.wear.tiles.TileService
 import androidx.wear.tooling.preview.devices.WearDevices
+import com.google.android.horologist.annotations.ExperimentalHorologistApi
+import com.google.android.horologist.compose.layout.ScalingLazyColumnDefaults
+import com.google.android.horologist.compose.layout.ScreenScaffold
 import dev.hloth.medsreminder.presentation.theme.MedsReminderTheme
-
+import com.google.android.horologist.compose.material.ResponsiveListHeader
+import com.google.android.horologist.compose.material.ListHeaderDefaults.firstItemPadding
 
 class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,32 +51,37 @@ class MainActivity : FragmentActivity() {
 
 @Composable
 fun WearApp(clickableId: String?) {
-    val gradient = Brush.linearGradient(
-        colors = listOf(Color.Magenta, Color.Cyan),
-        start = Offset(0f, 0f),
-        end = Offset(300f, 0f)
+    val columnState = rememberResponsiveColumnState(
+        contentPadding = ScalingLazyColumnDefaults.padding(
+            first = ScalingLazyColumnDefaults.ItemType.Text,
+            last = ScalingLazyColumnDefaults.ItemType.SingleButton
+        )
     )
+
     MedsReminderTheme {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                color = Color.Red,
-                style = TextStyle(
-                    brush = gradient
-                ),
-                text = clickableId ?: "Здесь ничего нет :)",
-            )
+        ScreenScaffold(scrollState = columnState) {
+            ScalingLazyColumn(
+//                columnState = columnState
+            ) {
+                item {
+                    ResponsiveListHeader(contentPadding = firstItemPadding()) {
+                        Text(text = "Последние записи")
+                    }
+                }
+                item {
+                    Chip(
+                        label = { Text("Example Chip") },
+                        onClick = { },
+                        modifier = Modifier.fillMaxSize(),
+                        colors = ChipDefaults.secondaryChipColors()
+                    )
+                }
+            }
         }
     }
 }
 
-@Preview(device = WearDevices.SMALL_ROUND, showSystemUi = true)
+@Preview(device = WearDevices.LARGE_ROUND, showSystemUi = true)
 @Composable
 fun DefaultPreview() {
     WearApp(null)

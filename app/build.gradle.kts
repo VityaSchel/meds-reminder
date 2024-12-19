@@ -54,6 +54,8 @@ dependencies {
     implementation(libs.tiles.material)
     implementation(libs.tiles.tooling.preview)
     implementation(libs.horologist.compose.tools)
+    implementation(libs.horologist.compose.layout)
+    implementation(libs.horologist.compose.material)
     implementation(libs.horologist.tiles)
     implementation(libs.watchface.complications.data.source.ktx)
     androidTestImplementation(platform(libs.compose.bom))
