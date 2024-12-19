@@ -63,4 +63,7 @@ dependencies {
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
     debugImplementation(libs.tiles.tooling)
+    implementation(libs.datastore)
+    implementation(libs.datastore.preferences)
+    implementation(libs.gson)
 }

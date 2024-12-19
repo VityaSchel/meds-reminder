@@ -137,6 +137,16 @@ private fun tileLayout(
         .setWidth(dp(4f))
         .build()
 
+    val buttons = listOf(
+        "triptan_forte" to "Трип-\nтан",
+        "active" to "Актив\nфлоур",
+        "pankraza" to "Панк-\nраза",
+        "metigast" to "Мети-\nгаст",
+        "hour_timer" to "1:00:00",
+        "nogast" to "Ногаст",
+        "empty" to "См.\nзаписи",
+    )
+
     return PrimaryLayout.Builder(requestParams.deviceConfiguration)
         .setResponsiveContentInsetEnabled(true)
         .setContent(
@@ -146,15 +156,15 @@ private fun tileLayout(
                         .setWidth(wrap())
                         .setHeight(wrap())
                         .addContent(
-                            createChipColumn(context, listOf("triptan_forte" to "Трип-\nтан", "hour_timer" to "1:00:00"))
-                        )//"com.samsung.android.watch.timer"
-                        .addContent(gap)
-                        .addContent(
-                            createChipColumn(context, listOf("20_min_timer" to "20:00", "nogast" to "Ногаст", "metigast" to "Мети-\nгаст"))
+                            createChipColumn(context, listOf(buttons[0], buttons[5]))
                         )
                         .addContent(gap)
                         .addContent(
-                            createChipColumn(context, listOf("active" to "Актив\nфлора", "pankraza" to "Панк-\nраза"))
+                            createChipColumn(context, listOf(buttons[1], buttons[6], buttons[4]))
+                        )
+                        .addContent(gap)
+                        .addContent(
+                            createChipColumn(context, listOf(buttons[2], buttons[3]))
                         )
                         .build()
                 )
