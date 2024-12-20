@@ -17,6 +17,7 @@ import androidx.wear.protolayout.ResourceBuilders
 import androidx.wear.protolayout.TimelineBuilders
 import androidx.wear.protolayout.expression.ProtoLayoutExperimental
 import androidx.wear.protolayout.material.Button
+import androidx.wear.protolayout.material.ButtonColors
 import androidx.wear.protolayout.material.layouts.PrimaryLayout
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.TileBuilders
@@ -28,6 +29,16 @@ import com.google.android.horologist.tiles.SuspendingTileService
 import dev.hloth.medsreminder.presentation.MainActivity
 
 private const val RESOURCES_VERSION = "0"
+
+private val colors = mapOf(
+    "triptan_forte" to 0xFF464652,
+    "active" to 0xFFc5b7a8,
+    "pankraza" to 0xFFd3553f,
+    "metigast" to 0xFFd4e113,
+    "nogast" to 0xFF638aba,
+    "aspan" to 0xFF579c65,
+    "empty" to 0xFFffffff
+)
 
 @OptIn(ExperimentalHorologistApi::class)
 class MainTileService : SuspendingTileService() {
@@ -81,6 +92,7 @@ private fun createMedChip(
                 .build()
 
         )
+        .setButtonColors(ButtonColors(colors[chipId]!!.toInt(), 0xFF000000.toInt()))
         .setSize(dp(47f))
         .build()
 }
@@ -142,8 +154,8 @@ private fun tileLayout(
         "active" to "Актив\nфлоур",
         "pankraza" to "Панк-\nраза",
         "metigast" to "Мети-\nгаст",
-        "hour_timer" to "1:00:00",
         "nogast" to "Ногаст",
+        "aspan" to "Аспан",
         "empty" to "См.\nзаписи",
     )
 

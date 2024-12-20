@@ -19,6 +19,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.horologist.compose.layout.rememberResponsiveColumnState
 import androidx.compose.ui.tooling.preview.Preview
@@ -101,12 +102,13 @@ fun formatDate(dateTimeString: String): String {
     }
 }
 
-private val colors = listOf(
+private val colors = mapOf(
     "triptan_forte" to 0xFF202023,
     "active" to 0xFF3F3B36,
     "pankraza" to 0xFF3A0E07,
     "metigast" to 0xFF373A07,
-    "nogast" to 0xFF071e3a,
+    "nogast" to 0xFF071E3A,
+    "aspan" to 0xFF073A11,
 )
 
 private val Context.dataStore by preferencesDataStore(name = "meds_records_storage_v6")
@@ -164,6 +166,9 @@ fun WearApp(context: Context, clickableId: String?, storageHelper: StorageHelper
         val records = storageHelper.loadFromStorage()
         storedEntries.clear()
         storedEntries.addAll(records.map { Triple(it.id, it.med, it.timestamp) })
+//        storedEntries.add(Triple("a", "triptan_forte", "2024-12-20T09:07:37.659862482"))
+//        storedEntries.add(Triple("b", "aspan", "2024-12-20T09:07:37.659862482"))
+//        storedEntries.add(Triple("c", "active", "2024-12-20T09:07:37.659862482"))
         isLoading.value = false
     }
 
@@ -172,7 +177,7 @@ fun WearApp(context: Context, clickableId: String?, storageHelper: StorageHelper
         clickableId?.let { med ->
             if(med == "hour_timer") {
                 openInstalledApp(context)
-            } else if (colors.any { it.first == med }) {
+            } else if (colors.containsKey(med)) {
                 val timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
                 val uniqueKey = UUID.randomUUID().toString()
                 storedEntries.add(0, Triple(uniqueKey, med, timestamp))
@@ -217,11 +222,12 @@ fun WearApp(context: Context, clickableId: String?, storageHelper: StorageHelper
                             "metigast" to "Метигаст",
                             "pankraza" to "Панкраза",
                             "nogast" to "Ногаст",
+                            "aspan" to "Аспан"
                         )[entry.second] ?: "Unknown") },
                         secondaryLabel = { Text(formatDate(entry.third)) },
                         onClick = { recordToRemove.value = entry },
                         modifier = Modifier.fillMaxSize(),
-                        colors = ChipDefaults.secondaryChipColors()
+                        colors = ChipDefaults.gradientBackgroundChipColors(Color(colors[entry.second]!!.toInt()))
                     )
                 }
             }
