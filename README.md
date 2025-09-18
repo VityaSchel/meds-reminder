@@ -14,3 +14,7 @@ Download: [https://github.com/VityaSchel/meds-reminder/releases](https://github.
 2. Pair your watches with PC
 3. Install ADB
 4. Use `adb -e install [path_to_apk_file]`
+
+## License
+
+[MIT](./LICENSE)
